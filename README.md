@@ -4,11 +4,12 @@ This Repo is a fork of https://github.com/mattbradley/google-images-gallery
 
 Differences from Orignal Repo
 -----
--Added Folder Browser
--Pics are restricted by php script rather than folder
--Removed Random Photo Order
--Added load more images when scroll down
--Added send json pages
+ * Added Folder Browser
+ * Pics are restricted by php script rather than folder
+ * Removed Random Photo Order
+ * Added load more images when scroll down
+ * Added send json pages
+ * Added Json Loading Folders
 
 Installation
 -----

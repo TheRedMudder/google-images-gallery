@@ -44,7 +44,8 @@ foreach ($files as $f) {
     }
 }
 if (isset($_GET['json'])) {
-    print_r(json_encode($pics));
+    $jsonout=array("picjson"=>$pics,"folderjson"=>$folders);
+    print_r(json_encode($jsonout));
     die();
 }
 //    
@@ -178,17 +179,20 @@ if (isset($_GET['json'])) {
             $(document).ready(function () {
                 $(this).scrollTop(0);
                 var pics = $.parseJSON('<?= json_encode($pics) ?>');
+                var folders = $.parseJSON('<?= json_encode($folders) ?>');
+               
                 displaypic(pics);
+                displayfolder(folders);
                 $(window).scroll(function () {
                     if ($(window).scrollTop() + $(window).height() > getDocHeight()-20) {
                         if (!isloading) {
                             
                             page++;
-//                            alert("bottom!"+page);
                             document.title="Loading - Photo Gallery";
                             isloading = true;
                             $.getJSON('./gallery.php?json='+page, function (data) {
-                                displaypic(data);
+                                displaypic(data.picjson);
+                                displayfolder(data.folderjson);
                             });
                             
                         }else{
@@ -207,6 +211,18 @@ if (isset($_GET['json'])) {
                         D.body.offsetHeight, D.documentElement.offsetHeight,
                         D.body.clientHeight, D.documentElement.clientHeight
                         );
+            }
+            function displayfolder(folders){
+                var a=0;var folderhtml='';
+                while (a<folders.length){
+                    folderhtml+=foldbuild(folders[a]);
+                    a++;
+                }
+                $( "#folder-container" ).append( folderhtml );
+                
+            }
+            function foldbuild(folder){
+                return ('<div class="folder" onclick="goto(\''+folder.src+'\')"><div class="folder-img" style="align: left;"></div><b>'+folder.name+'</b><br/>Images:'+folder.count+'<br/></div>');
             }
             function displaypic(pics) {
                 clearTimeout(timeout);
@@ -294,11 +310,7 @@ if (isset($_GET['json'])) {
         <div id="folder-container">
 
             <h2><a class="flink" href="gallery.php">Files</a> &rarr; <?php echo $photo_dirs; ?> </h2>
-            <?php foreach ($folders as $fold) {
-                ?>
-                <div class="folder" onclick="goto('<?php echo $fold['src']; ?>')"><div class='folder-img' style="align: left;"></div><b><?php echo $fold['name']; ?></b><br/>Images:<?php echo $fold['count']; ?><br/></div>
-            <?php }
-            ?>
+            
         </div>
 
         <div id="container">
