@@ -6,6 +6,9 @@ Differences from Orignal Repo
 -----
 -Added Folder Browser
 -Pics are restricted by php script rather than folder
+-Removed Random Photo Order
+-Added load more images when scroll down
+-Added send json pages
 
 Installation
 -----
