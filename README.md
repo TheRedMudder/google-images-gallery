@@ -10,7 +10,7 @@ Differences from Orignal Repo
  * Added load more images when scroll down
  * Added send json pages
  * Added Json Loading Folders
-
+ * Fix issue of Single Quote in Image causing script error
 Installation
 -----
 Put your images in the `pics/` directory or configure config.php to picture location. Do not delete 'pic/', but you can delete 'pics/'. Visit `gallery.php`.

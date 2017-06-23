@@ -39,7 +39,7 @@ foreach ($files as $f) {
             $pics[] = $p;
         }
     } else {
-        $d = array("name" => $f, "src" => $p['src'], 'count' => count(scandir($img_folder . "/" . $p['src'])) - 2);
+        $d = array("name" => htmlentities($f), "src" => $p['src'], 'count' => count(scandir($img_folder . "/" . $p['src'])) - 2);
         $folders[] = $d;
     }
 }
@@ -173,13 +173,18 @@ if (isset($_GET['json'])) {
             var isloading = true;
             var timeout;
             var page=0;
+            function escapeSQ(inp){
+                var strwithqoute=inp;
+                strwoquote=strwithqoute.replace(/'/g, "\\'");
+                return strwoquote;
+            }
             window.onbeforeunload = function () {
                 window.scrollTo(0, 0);
             }
             $(document).ready(function () {
                 $(this).scrollTop(0);
-                var pics = $.parseJSON('<?= json_encode($pics) ?>');
-                var folders = $.parseJSON('<?= json_encode($folders) ?>');
+                var pics = <?= json_encode($pics) ?>;
+                var folders = <?= json_encode($folders) ?>;
                
                 displaypic(pics);
                 displayfolder(folders);
@@ -222,7 +227,7 @@ if (isset($_GET['json'])) {
                 
             }
             function foldbuild(folder){
-                return ('<div class="folder" onclick="goto(\''+folder.src+'\')"><div class="folder-img" style="align: left;"></div><b>'+folder.name+'</b><br/>Images:'+folder.count+'<br/></div>');
+                return ('<div class="folder" onclick="goto(\''+escapeSQ(folder.src)+'\')"><div class="folder-img" style="align: left;"></div><b>'+folder.name+'</b><br/>Images:'+folder.count+'<br/></div>');
             }
             function displaypic(pics) {
                 clearTimeout(timeout);
