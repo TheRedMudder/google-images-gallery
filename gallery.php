@@ -19,7 +19,7 @@ if (isset($_GET['folder'])) {
 
 $files = array_slice($files, 2);
 //    shuffle($files);
-$files = array_slice($files, ( isset($_GET['json'])?  25*$_GET['json']:0 ), 25);
+$files = array_slice($files, ( isset($_GET['json']) ? 25 * $_GET['json'] : 0), 25);
 
 $pics = array();
 $folders = array();
@@ -44,7 +44,7 @@ foreach ($files as $f) {
     }
 }
 if (isset($_GET['json'])) {
-    $jsonout=array("picjson"=>$pics,"folderjson"=>$folders);
+    $jsonout = array("picjson" => $pics, "folderjson" => $folders);
     print_r(json_encode($jsonout));
     die();
 }
@@ -54,6 +54,8 @@ if (isset($_GET['json'])) {
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <link rel="apple-touch-icon" href="iconiphone.png" sizes="100x100">
         <meta charset="UTF-8" />
         <title>Photo Gallery</title>
         <style type="text/css">
@@ -71,7 +73,7 @@ if (isset($_GET['json'])) {
             }
 
             #container,#folder-container  {
-                width: 1000px;
+                width: 100%;
                 margin: 0 auto;
             }
 
@@ -149,6 +151,9 @@ if (isset($_GET['json'])) {
                     text-overflow: ellipsis;
                 }
 
+                #container,#folder-container  {
+                    width: 1000px;
+                }
             }
             .folder .folder-img {
                 position: absolute;
@@ -171,39 +176,69 @@ if (isset($_GET['json'])) {
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
         <script type="text/javascript">
             var isloading = true;
+            var default_folder_container;
+            var default_photo_container;
+
             var timeout;
-            var page=0;
-            function escapeSQ(inp){
-                var strwithqoute=inp;
-                strwoquote=strwithqoute.replace(/'/g, "\\'");
+            var page = 0;
+            var diswidth = screen.width;
+            var rowWidth = Math.min(1000, diswidth);
+            var store_folder;
+            var store_images;
+            function escapeSQ(inp) {
+                var strwithqoute = inp;
+                strwoquote = strwithqoute.replace(/'/g, "\\'");
                 return strwoquote;
             }
+            function updateLayout() {
+                isloading = true;
+                document.title = "Loading - Photo Gallery";
+                $('#folder-container').html(default_folder_container);
+                $('#container').html(default_photo_container);
+                if (Math.abs(window.orientation) === 90) {
+                    // Landscape
+                    rowWidth=screen.height;
+                } else {
+                    //Potrait
+                    rowWidth=screen.width;
+                }
+                displaypic(store_images);
+                displayfolder(store_folder);
+            }
+            window.onorientationchange = updateLayout;
             window.onbeforeunload = function () {
                 window.scrollTo(0, 0);
             }
             $(document).ready(function () {
                 $(this).scrollTop(0);
+                default_folder_container = $('#folder-container').html();
+                default_photo_container = $('#container').html();
+
                 var pics = <?= json_encode($pics) ?>;
                 var folders = <?= json_encode($folders) ?>;
-               
+                store_folder = folders;
+                store_images = pics;
                 displaypic(pics);
                 displayfolder(folders);
+
                 $(window).scroll(function () {
-                    if ($(window).scrollTop() + $(window).height() > getDocHeight()-20) {
+                    if ($(window).scrollTop() + $(window).height() > getDocHeight() - 20) {
                         if (!isloading) {
-                            
+
                             page++;
-                            document.title="Loading - Photo Gallery";
+                            document.title = "Loading - Photo Gallery";
                             isloading = true;
-                            
-                            $.getJSON('./gallery.php?<?php echo ( isset($_GET['folder'])?  'folder='.addslashes($_GET['folder']).'&':'' ); ?>json='+page, function (data) {
+
+                            $.getJSON('./gallery.php?<?php echo ( isset($_GET['folder']) ? 'folder=' . addslashes($_GET['folder']) . '&' : '' ); ?>json=' + page, function (data) {
+                                store_images = store_images.concat(data.picjson);
+                                store_folder = store_folder.concat(data.folderjson);
                                 displaypic(data.picjson);
                                 displayfolder(data.folderjson);
                             });
-                            
-                        }else{
-                            
-                    document.title="No More Content - Photo Gallery";
+
+                        } else {
+
+                            document.title = "No More Content - Photo Gallery";
                         }
 
 
@@ -218,21 +253,21 @@ if (isset($_GET['json'])) {
                         D.body.clientHeight, D.documentElement.clientHeight
                         );
             }
-            function displayfolder(folders){
-                var a=0;var folderhtml='';
-                while (a<folders.length){
-                    folderhtml+=foldbuild(folders[a]);
+            function displayfolder(folders) {
+                var a = 0;
+                var folderhtml = '';
+                while (a < folders.length) {
+                    folderhtml += foldbuild(folders[a]);
                     a++;
                 }
-                $( "#folder-container" ).append( folderhtml );
-                
+                $("#folder-container").append(folderhtml);
+
             }
-            function foldbuild(folder){
-                return ('<div class="folder" onclick="goto(\''+escapeSQ(folder.src)+'\')"><div class="folder-img" style="align: left;"></div><b>'+folder.name+'</b><br/>Images:'+folder.count+'<br/></div>');
+            function foldbuild(folder) {
+                return ('<div class="folder" onclick="goto(\'' + escapeSQ(folder.src) + '\')"><div class="folder-img" style="align: left;"></div><b>' + folder.name + '</b><br/>Images:' + folder.count + '<br/></div>');
             }
             function displaypic(pics) {
                 clearTimeout(timeout);
-                var rowWidth = 1000;
                 var spacing = 6;
                 var b = 0, e = 0, rowHeight;
                 while (e < pics.length) {
@@ -296,7 +331,7 @@ if (isset($_GET['json'])) {
                 timeout = setTimeout(function ()
                 {
                     isloading = false;
-                    document.title="Done - Photo Gallery";
+                    document.title = "Done - Photo Gallery";
                 }, 500);
             }
             function buildimg(pic) {
@@ -310,13 +345,14 @@ if (isset($_GET['json'])) {
             function goto(folder) {
                 document.location = 'gallery.php?folder=' + folder;
             }
+            
         </script>
     </head>
     <body>
         <div id="folder-container">
 
             <h2><a class="flink" href="gallery.php">Files</a> &rarr; <?php echo $photo_dirs; ?> </h2>
-            
+
         </div>
 
         <div id="container">

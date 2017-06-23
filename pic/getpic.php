@@ -45,14 +45,14 @@ include '../config.php';
     if (isset($_GET['q'])) {
         $q = explode('/', $_GET['q'], 2);
         $src = '../'.$img_folder.'/' . $q[1] ;
-        list($w, $h) = explode('x', $q[1]);
+        list($w, $h) = explode('x', $q[0]);
 
         if (!file_exists($src)) {
           print_r($q);
             header('HTTP/1.1 404 Not Found');
             exit;
         }
-
+//die($q[0]);
         resizeImage($src, $w, $h);
         exit;
     }

@@ -11,6 +11,7 @@ Differences from Orignal Repo
  * Added send json pages
  * Added Json Loading Folders
  * Fix issue of Single Quote in Image causing script error
+ * Dynamically changes width of images on orientation change for IOS Safari
 Installation
 -----
 Put your images in the `pics/` directory or configure config.php to picture location. Do not delete 'pic/', but you can delete 'pics/'. Visit `gallery.php`.
