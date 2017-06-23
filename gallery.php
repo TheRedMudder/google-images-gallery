@@ -195,7 +195,8 @@ if (isset($_GET['json'])) {
                             page++;
                             document.title="Loading - Photo Gallery";
                             isloading = true;
-                            $.getJSON('./gallery.php?json='+page, function (data) {
+                            
+                            $.getJSON('./gallery.php?<?php echo ( isset($_GET['folder'])?  'folder='.addslashes($_GET['folder']).'&':'' ); ?>json='+page, function (data) {
                                 displaypic(data.picjson);
                                 displayfolder(data.folderjson);
                             });
