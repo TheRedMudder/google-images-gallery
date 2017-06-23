@@ -1,8 +1,8 @@
 <?php
-
-    ini_set('display_errors', 1);
-    error_reporting(E_ALL);
-
+include '../config.php';
+    // ini_set('display_errors', 1);
+    // error_reporting(E_ALL);
+// die('hi')
     function echoHeaders() {
         header("Cache-Control: private, max-age=10800, pre-check=10800");
         header("Pragma: private");
@@ -14,7 +14,7 @@
         $toWidth = intval($toWidth);
         $toHeight = intval($toHeight);
 
-        list($width, $height) = getimagesize($originalImage); 
+        list($width, $height) = getimagesize($originalImage);
 
         if ((!$toWidth && !$toHeight) || ($toWidth >= $width && $toHeight >= $height)) {
             echoHeaders();
@@ -25,29 +25,30 @@
         $xscale = $toWidth ? $width / $toWidth : 0;
         $yscale = $toHeight ? $height / $toHeight : 0;
 
-        if ($yscale > $xscale) { 
-            $new_width = round($width / $yscale); 
-            $new_height = round($toHeight); 
-        } 
-        else { 
-            $new_width = round($toWidth); 
-            $new_height = round($height / $xscale); 
-        } 
-        
-        $imageResized = imagecreatetruecolor($new_width, $new_height); 
-        $imageTmp = imagecreatefromjpeg($originalImage); 
-        imagecopyresampled($imageResized, $imageTmp, 0, 0, 0, 0, $new_width, $new_height, $width, $height); 
+        if ($yscale > $xscale) {
+            $new_width = round($width / $yscale);
+            $new_height = round($toHeight);
+        }
+        else {
+            $new_width = round($toWidth);
+            $new_height = round($height / $xscale);
+        }
+
+        $imageResized = imagecreatetruecolor($new_width, $new_height);
+        $imageTmp = imagecreatefromjpeg($originalImage);
+        imagecopyresampled($imageResized, $imageTmp, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
 
         echoHeaders();
         imagejpeg($imageResized, NULL, 90);
     }
 
     if (isset($_GET['q'])) {
-        $q = explode('/', $_GET['q'], 3);
-        $src = '../pics/p' . $q[0] . '.jpg';
+        $q = explode('/', $_GET['q'], 2);
+        $src = '../'.$img_folder.'/' . $q[1] ;
         list($w, $h) = explode('x', $q[1]);
 
         if (!file_exists($src)) {
+          print_r($q);
             header('HTTP/1.1 404 Not Found');
             exit;
         }

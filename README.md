@@ -1,19 +1,15 @@
-Google Images Gallery
+Google Images Gallery with Folder Browser
 =====================
+This Repo is a fork of https://github.com/mattbradley/google-images-gallery
 
-This little PHP script mimics the layout of the gallery of images you see when
-you do a Google Images search. It resizes images so that rows of images are
-equal-width, with every image on a row having the same height.
-
-### Google Images Gallery:
-![Google Images Gallery](http://mattbradley.github.com/google-images-gallery/google.jpg)
-
-### My Gallery:
-![My Gallery](http://mattbradley.github.com/google-images-gallery/mine.jpg)
-
-Usage
+Differences from Orignal Repo
 -----
-Put your images in the `pics/` directory. Visit `gallery.php`.
+-Added Folder Browser
+-Pics are restricted by php script rather than folder
+
+Installation
+-----
+Put your images in the `pics/` directory or configure config.php to picture location. Do not delete 'pic/', but you can delete 'pics/'. Visit `gallery.php`.
 
 Dependencies
 ------------
