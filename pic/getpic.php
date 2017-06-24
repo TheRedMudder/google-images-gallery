@@ -1,8 +1,9 @@
 <?php
 include '../config.php';
-    // ini_set('display_errors', 1);
-    // error_reporting(E_ALL);
+//     ini_set('display_errors', 1);
+//     error_reporting(E_ALL);
 // die('hi')
+//ini_set("memory_limit","10000M");
     function echoHeaders() {
         header("Cache-Control: private, max-age=10800, pre-check=10800");
         header("Pragma: private");
@@ -37,9 +38,11 @@ include '../config.php';
         $imageResized = imagecreatetruecolor($new_width, $new_height);
         $imageTmp = imagecreatefromjpeg($originalImage);
         imagecopyresampled($imageResized, $imageTmp, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-
         echoHeaders();
         imagejpeg($imageResized, NULL, 90);
+        imagedestroy($imageResized);
+        imagedestroy($imageTmp);
+        
     }
 
     if (isset($_GET['q'])) {
@@ -52,7 +55,6 @@ include '../config.php';
             header('HTTP/1.1 404 Not Found');
             exit;
         }
-//die($q[0]);
         resizeImage($src, $w, $h);
         exit;
     }

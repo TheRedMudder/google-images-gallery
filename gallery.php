@@ -338,9 +338,14 @@ if (isset($_GET['json'])) {
                 return (
                         '<img ' +
                         'src="pic/' + pic._w + 'x' + pic._h + '/' + pic.src + '" ' +
+//                        'onerror="this.onerror = null; this.src=\'pic/' + escapeSQ(pic.src) + '\'" ' +
+                        'onerror="this.onerror = null; this.src=\'<?php echo $img_folder;?>/' + escapeSQ(pic.src) + '\'" ' +
+//                        'onerror="this.onerror = null; this.src=\'fail.jpg\'" ' +
                         'width="' + pic._w + '" ' +
                         'height="' + pic._h + '" ' +
                         '/>');
+                
+                ;
             }
             function goto(folder) {
                 document.location = 'gallery.php?folder=' + folder;
